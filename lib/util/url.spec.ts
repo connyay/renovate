@@ -60,6 +60,7 @@ describe('util/url', () => {
     ${'http://foo.io/'}     | ${''}                   | ${'http://foo.io'}
     ${'http://foo.io'}      | ${'/'}                  | ${'http://foo.io/'}
     ${'http://foo.io/'}     | ${'/'}                  | ${'http://foo.io/'}
+    ${'http://foo.io:8080'} | ${'/aaa'}               | ${'http://foo.io:8080/aaa'}
     ${'http://foo.io'}      | ${'/aaa'}               | ${'http://foo.io/aaa'}
     ${'http://foo.io'}      | ${'aaa'}                | ${'http://foo.io/aaa'}
     ${'http://foo.io/'}     | ${'/aaa'}               | ${'http://foo.io/aaa'}

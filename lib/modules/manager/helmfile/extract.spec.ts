@@ -394,6 +394,37 @@ describe('modules/manager/helmfile/extract', () => {
       });
     });
 
+    it('parses a chart with an oci repository with a port', async () => {
+      const content = codeBlock`
+      repositories:
+        - name: internal-infra
+          url: oci.example.local:10000/helm/
+          oci: true
+      ---
+      releases:
+        - name: internal-example
+          version: 0.1.0
+          chart: internal-infra/internal-example
+      `;
+      const fileName = 'helmfile.yaml';
+      const result = await extractPackageFile(content, fileName, {
+        registryAliases: {
+          stable: 'https://charts.helm.sh/stable',
+        },
+      });
+      expect(result).toMatchObject({
+        datasource: 'helm',
+        deps: [
+          {
+            currentValue: '0.1.0',
+            depName: 'internal-example',
+            datasource: 'docker',
+            packageName: 'oci.example.local:10000/helm/internal-example',
+          },
+        ],
+      });
+    });
+
     it('parses and replaces templating strings', async () => {
       const filename = 'helmfile.yaml';
       fs.localPathExists.mockReturnValue(Promise.resolve(true));
